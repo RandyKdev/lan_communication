@@ -1,2 +1,2 @@
 int networkingPort = 2001;
-String serverAddress = '192.168.1.17';
+String serverAddress = '192.168.0.102';

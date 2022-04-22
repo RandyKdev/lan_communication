@@ -9,66 +9,107 @@ import 'package:lan_communication/server_socket.dart';
 import 'package:lan_communication/setup.dart';
 import 'package:lan_communication/client_socket.dart';
 
-Future<void> _parseInBackground(bool isServer, Stream<String> commands) async {
-  final p = ReceivePort();
-  await Isolate.spawn(_startSocket, p.sendPort);
-  final events = StreamQueue<dynamic>(p);
-  SendPort sendPort = await events.next;
-  sendPort.send(isServer);
-  commands.listen((event) async {
-    sendPort.send(event);
-    if (event == 'stop') {
-      await events.cancel();
-    }
-  });
+// late ReceivePort inputReceivePort;
+late ReceivePort commandReceivePort;
+// late SendPort inputSendPort;
+late SendPort commandSendPort;
+
+Future<void> _parseInputInBackground() async {
+  final inputReceivePort = ReceivePort();
+  await Isolate.spawn(_startInputSocket, inputReceivePort.sendPort);
+
+  final events = StreamQueue<dynamic>(inputReceivePort);
+  final inputSendPort = await events.next;
+
+  inputSendPort.send(commandSendPort);
 }
 
-void _startSocket(SendPort p) async {
-  final rPort2 = ReceivePort();
-  p.send(rPort2.sendPort);
+void _startInputSocket(SendPort p) async {
+  final _commandReceivePort = ReceivePort();
+  p.send(_commandReceivePort.sendPort);
+  String ipAddress = await Setup.getIpAddress();
+
+  String? input;
+
+  final _commandSendPort = await _commandReceivePort.first;
+
+  while (true) {
+    print('Type exit to quit');
+    input = stdin.readLineSync();
+    if (input == null || input.trim().isEmpty) {
+      continue;
+    } else if (input == 'exit') {
+      break;
+    } else {
+      input = '$input\nFrom $ipAddress';
+      print(input);
+      _commandSendPort.send(input);
+    }
+  }
+  _commandSendPort.send('stop');
+  Isolate.exit();
+}
+
+Future<void> _parseCommandInBackground(bool isServer) async {
+  commandReceivePort = ReceivePort();
+  // print(commands.hashCode);
+  await Isolate.spawn(_startCommandSocket, commandReceivePort.sendPort);
+  // print(commands);
+  final events = StreamQueue<dynamic>(commandReceivePort);
+  commandSendPort = await events.next;
+  print(commandSendPort);
+  await _parseInputInBackground();
+  commandSendPort.send(isServer);
+  // sendPort.send(commands);
+  // String m = await events.next;
+  // if (m == 'stop') {
+  // events.cancel();
+  // }
+  print('hey');
+  await events.next;
+  exit(0);
+  // commands.stream.listen((event) async {
+  //   print('stream');
+  //   sendPort.send(event);
+  //   if (event == 'stop') {
+  //     await events.cancel();
+  //   }
+  // });
+}
+
+void _startCommandSocket(SendPort p) async {
+  final _commandReceivePort = ReceivePort();
+  p.send(_commandReceivePort.sendPort);
 
   late ParentSocket socket;
   String ipAddress = await Setup.getIpAddress();
 
-  await for (final message in rPort2) {
+  await for (final message in _commandReceivePort) {
     if (message is bool) {
+      print(message);
       if (message == true) {
         socket = ServerSocketClass();
       } else {
         socket = ClientSocketClass();
       }
       await socket.start(ipAddress);
-    } else if (message != 'stop') {
-      socket.sendMessage(message);
+    } else if (message is String && message != 'stop') {
+      print(message + 'Message');
+      await socket.stop();
     } else {
+      print('hstopping');
       break;
     }
-    Isolate.exit();
   }
+  // p.send('stop');
+  Isolate.exit(p, 'stop');
 }
 
 void main(List<String> arguments) async {
   await Setup.start();
 
   bool isServer = await Setup.isServer();
-  final commandsStreamController = StreamController<String>();
-  String ipAddress = await Setup.getIpAddress();
-  await _parseInBackground(isServer, commandsStreamController.stream);
-
-  String? input;
-
-  while (true) {
-    print('Type exit to quit');
-    input = stdin.readLineSync();
-    if (input == null || input.trim().isEmpty) continue;
-    if (input == 'exit') {
-      break;
-    }
-    input = '$input\nFrom $ipAddress';
-    commandsStreamController.sink.add(input);
-  }
-
-  commandsStreamController.sink.add('stop');
-  // await socket.stop();
-  exit(0);
+  await _parseCommandInBackground(isServer);
+  // await _parseInputInBackground();
+  // exit(0);
 }
