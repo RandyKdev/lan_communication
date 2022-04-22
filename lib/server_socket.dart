@@ -55,7 +55,10 @@ class ServerSocketClass extends ParentSocket {
   @override
   void sendMessage(String message) {
     for (final Socket socket in _sockets) {
-      _sendMessageToSocket(socket, message);
+      if (socket.remoteAddress.address !=
+          message.substring(message.lastIndexOf('From ') + 5)) {
+        _sendMessageToSocket(socket, message);
+      }
     }
   }
 
@@ -68,7 +71,8 @@ class ServerSocketClass extends ParentSocket {
   /// Closes all streams and shuts down the socket servers.
   @override
   Future<void> stop() async {
-    for (final Socket socket in _sockets) {
+    final s = [..._sockets];
+    for (final Socket socket in s) {
       await _stopSocket(socket);
     }
     await _serverSocket.close();

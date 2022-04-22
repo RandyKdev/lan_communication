@@ -42,7 +42,6 @@ void _startInputSocket(SendPort p) async {
       break;
     } else {
       input = '$input\nFrom $ipAddress';
-      print(input);
       _commandSendPort.send(input);
     }
   }
@@ -52,29 +51,13 @@ void _startInputSocket(SendPort p) async {
 
 Future<void> _parseCommandInBackground(bool isServer) async {
   commandReceivePort = ReceivePort();
-  // print(commands.hashCode);
   await Isolate.spawn(_startCommandSocket, commandReceivePort.sendPort);
-  // print(commands);
   final events = StreamQueue<dynamic>(commandReceivePort);
   commandSendPort = await events.next;
-  print(commandSendPort);
   await _parseInputInBackground();
   commandSendPort.send(isServer);
-  // sendPort.send(commands);
-  // String m = await events.next;
-  // if (m == 'stop') {
-  // events.cancel();
-  // }
-  print('hey');
   await events.next;
   exit(0);
-  // commands.stream.listen((event) async {
-  //   print('stream');
-  //   sendPort.send(event);
-  //   if (event == 'stop') {
-  //     await events.cancel();
-  //   }
-  // });
 }
 
 void _startCommandSocket(SendPort p) async {
@@ -86,7 +69,6 @@ void _startCommandSocket(SendPort p) async {
 
   await for (final message in _commandReceivePort) {
     if (message is bool) {
-      print(message);
       if (message == true) {
         socket = ServerSocketClass();
       } else {
@@ -94,10 +76,10 @@ void _startCommandSocket(SendPort p) async {
       }
       await socket.start(ipAddress);
     } else if (message is String && message != 'stop') {
-      print(message + 'Message');
-      await socket.stop();
+      socket.sendMessage(message);
     } else {
-      print('hstopping');
+      print('Stopping...');
+      await socket.stop();
       break;
     }
   }

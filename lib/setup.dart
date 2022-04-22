@@ -25,7 +25,6 @@ class Setup {
       print('Will this computer be used as the server?');
       print('Yes, Y or No, N');
       input = stdin.readLineSync();
-      print(input);
     } while (input == null ||
         !(input.toLowerCase() == 'y' ||
             input.toLowerCase() == 'n' ||
