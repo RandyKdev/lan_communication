@@ -13,6 +13,7 @@ class ServerSocketClass extends ParentSocket {
 
   void _handleIncomingMessage(Socket socket, Uint8List event) {
     String message = String.fromCharCodes(event);
+    print('\n\nMessage\n$message\n');
     // message = message + '\n' + 'From ${socket.remoteAddress.toString()}';
     sendMessage(message);
   }
@@ -40,6 +41,7 @@ class ServerSocketClass extends ParentSocket {
     _serverSocket = await ServerSocket.bind(
       ipAddress,
       networkingPort,
+      shared: true,
     );
     _serverSocket.listen(_handleIncomingSocket);
     _serverSocket.handleError(_handleError);

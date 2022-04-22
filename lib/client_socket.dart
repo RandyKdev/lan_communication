@@ -14,7 +14,7 @@ class ClientSocketClass extends ParentSocket {
     if (message == '200') {
       print('Connection made');
     } else {
-      print(message);
+      print('\n\nMessage\n$message\n');
     }
   }
 
@@ -23,7 +23,7 @@ class ClientSocketClass extends ParentSocket {
   }
 
   void _handleCloseSocket(dynamic event) {
-    print('Server closed the connection');
+    print('Connection closed');
     exit(0);
   }
 
