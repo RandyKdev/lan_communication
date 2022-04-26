@@ -6,7 +6,7 @@ class PGP extends Cryptography {
   void generateSessionKey() {}
 
   @override
-  String encrypt({required String message, required String key}) {
+  String encrypt({required String message, required dynamic key}) {
     return '';
   }
 

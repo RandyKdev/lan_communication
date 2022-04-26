@@ -44,7 +44,6 @@ class Setup {
       print('2) Public key');
       print('3) PGP');
       cr = stdin.readLineSync();
-      print(cr);
     } while (cr == null || int.tryParse(cr) == null);
 
     if (cr == '1') {
@@ -54,13 +53,12 @@ class Setup {
       do {
         print('Enter Caesars cipher key');
         cr = stdin.readLineSync();
-        print(cr);
       } while (cr == null || int.tryParse(cr) == null);
       (cryptography as CaesarsCipher).key = int.tryParse(cr)!;
     } else if (cr == '2') {
-      cryptography = PublicKey();
+      cryptography = PublicKeyCrypt();
       encryptionType = EncryptionEnum.publicKey;
-      (cryptography as PublicKey).generateKeys();
+      (cryptography as PublicKeyCrypt).generateKeys();
     } else {
       cryptography = PGP();
       encryptionType = EncryptionEnum.pgp;
@@ -70,7 +68,6 @@ class Setup {
     if (input.toLowerCase().contains('y')) {
       return true;
     } else {
-      print('false');
       return false;
     }
   }

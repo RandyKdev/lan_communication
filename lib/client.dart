@@ -1,14 +1,16 @@
 import 'dart:convert';
 
+import 'package:crypto_keys/crypto_keys.dart';
+
 class Client {
   String name;
   String ipAddress;
-  String? publicKey;
+  PublicKey? publicKey;
   Client({required this.ipAddress, required this.name, this.publicKey});
 
   static String encode(List<Client> clients) {
     return jsonEncode(clients.map((e) {
-      return <String, String?>{
+      return <String, dynamic>{
         'name': e.name,
         'ipAddress': e.ipAddress,
         'publicKey': e.publicKey,

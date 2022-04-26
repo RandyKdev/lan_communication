@@ -6,7 +6,7 @@ class CaesarsCipher extends Cryptography {
   set key(int k) => _key = k;
 
   @override
-  String encrypt({required String message, required String key}) {
+  String encrypt({required String message, required dynamic key}) {
     return message
         .split('')
         .map((e) => String.fromCharCode(e.codeUnits.first + int.parse(key)))

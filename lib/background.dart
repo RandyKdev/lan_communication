@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:async/async.dart';
 import 'package:lan_communication/encryptions/caesars_cipher.dart';
+import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/message.dart';
 import 'package:lan_communication/sockets/client_socket.dart';
@@ -44,11 +45,9 @@ class Background {
         if (message == true) {
           socket = ServerSocketClass();
         } else {
-          print('hey');
           socket = ClientSocketClass();
         }
         await socket.start(ipAddress, p);
-        print('start');
       } else if (message is List) {
         name = message[0];
         cryptography = message[1];
@@ -57,16 +56,34 @@ class Background {
         Map<String, dynamic> i = Message.decode(message);
         i['destinationIpAddress'] =
             clients[int.parse(i['destinationIpAddress']) - 1].ipAddress;
-        socket.sendMessage(await Message.encode(
-          encryptionType: i['encryptionType'],
-          message: i['message'],
-          name: i['sourceName'],
-          type: i['type'],
-          destinationIpAddress: i['destinationIpAddress'],
-        )
-            // jsonEncode(i));
-            );
-        print('Sent');
+
+        if (cryptography is CaesarsCipher) {
+          socket.sendMessage(await Message.encode(
+            encryptionType: i['encryptionType'],
+            message: i['message'],
+            name: i['sourceName'],
+            type: i['type'],
+            destinationIpAddress: i['destinationIpAddress'],
+          )
+              // jsonEncode(i));
+              );
+        } else if (cryptography is PublicKeyCrypt) {
+          socket.sendMessage(await Message.encode(
+            encryptionType: i['encryptionType'],
+            message: cryptography.encrypt(
+              message: i['message'],
+              key: clients
+                  .lastWhere((element) =>
+                      element.ipAddress == i['destinationIpAddress'])
+                  .publicKey,
+            ),
+            name: i['sourceName'],
+            type: i['type'],
+            destinationIpAddress: i['destinationIpAddress'],
+          )
+              // jsonEncode(i));
+              );
+        }
       } else {
         print('Exiting...');
         await socket.stop();
@@ -94,7 +111,8 @@ class Background {
 
     String? send;
     String? message;
-    String? key;
+    dynamic key;
+    String? j;
     List<dynamic> e = await _commandReceivePort.first;
     final _commandSendPort = e.first;
     cryptography = e[1];
@@ -135,14 +153,23 @@ class Background {
           if (key == 'exit') {
             break;
           }
+          j = await Message.encode(
+            message: cryptography.encrypt(message: message, key: key!),
+            encryptionType: encryptionType,
+            type: MessageTypeEnum.data,
+            name: name!,
+            destinationIpAddress: send,
+          );
+        } else if (cryptography is PublicKeyCrypt) {
+          j = await Message.encode(
+            message: message,
+            encryptionType: encryptionType,
+            type: MessageTypeEnum.data,
+            name: name!,
+            destinationIpAddress: send,
+          );
         }
-        String j = await Message.encode(
-          message: cryptography.encrypt(message: message, key: key!),
-          encryptionType: encryptionType,
-          type: MessageTypeEnum.data,
-          name: name!,
-          destinationIpAddress: send,
-        );
+
         _commandSendPort!.send(j);
         send = null;
         message = null;

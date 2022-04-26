@@ -5,6 +5,7 @@ import 'dart:isolate';
 
 import 'dart:typed_data';
 
+import 'package:crypto_keys/crypto_keys.dart';
 import 'package:lan_communication/client.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/connection_enum.dart';
@@ -43,7 +44,7 @@ class ClientSocketClass extends ParentSocket {
             message: Client.encode([
               Client(
                   ipAddress: await Setup.getIpAddress(),
-                  publicKey: (cryptography as PublicKey).publicKey,
+                  publicKey: (cryptography as PublicKeyCrypt).publicKey,
                   name: name!)
             ]),
             name: name!,
@@ -57,7 +58,14 @@ class ClientSocketClass extends ParentSocket {
       _p.send(clients);
     } else {
       print('\nMessage');
-      print(cryptography.decrypt(message: msg['message']));
+      if (cryptography is PublicKeyCrypt) {
+        print('Encrypted Message: ' +
+            String.fromCharCodes((msg['message'] as EncryptionResult).data));
+      } else {
+        print('Encrypted Message: ' + msg['message']);
+      }
+      print('Decrypted Message: ' +
+          cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');
     }
   }
