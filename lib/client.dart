@@ -13,7 +13,10 @@ class Client {
       return <String, dynamic>{
         'name': e.name,
         'ipAddress': e.ipAddress,
-        'publicKey': e.publicKey,
+        'publicKey': {
+          "exponent": (e.publicKey as RsaPublicKey).exponent.toString(),
+          "modulus": (e.publicKey as RsaPublicKey).modulus.toString(),
+        },
       };
     }).toList());
   }
@@ -23,7 +26,10 @@ class Client {
       return Client(
           ipAddress: e['ipAddress']!,
           name: e['name']!,
-          publicKey: e['publicKey']);
+          publicKey: RsaPublicKey(
+            exponent: BigInt.parse(e['publicKey']['exponent']),
+            modulus: BigInt.parse(e['publicKey']['modulus']),
+          ));
     }).toList();
   }
 }
