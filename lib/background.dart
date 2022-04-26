@@ -24,7 +24,7 @@ class Background {
 
     // bool isServer = await Setup.isServer();
 
-    commandSendPort.send([name, cryptography]);
+    commandSendPort.send([name, cryptography, encryptionType]);
 
     // commandSendPort.send('name: $name');
     // commandSendPort
@@ -60,6 +60,7 @@ class Background {
       } else if (message is List) {
         name = message[0];
         cryptography = message[1];
+        encryptionType = message[2];
       } else if (message is String && message != 'exit') {
         Map<String, dynamic> i = Message.decode(message);
         i['destinationIpAddress'] =
