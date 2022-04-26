@@ -42,7 +42,10 @@ class ServerSocketClass extends ParentSocket {
       print('\nMessage');
       if (cryptography is PublicKeyCrypt) {
         print('Encrypted Message: ' +
-            String.fromCharCodes((msg['message'] as EncryptionResult).data));
+            String.fromCharCodes(
+                (EncryptionResult(Uint8List.fromList(''.codeUnits))
+                        .parseEncryption(msg['message']))
+                    .data));
       } else {
         print('Encrypted Message: ' + msg['message']);
       }
