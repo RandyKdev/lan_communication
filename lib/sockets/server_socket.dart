@@ -24,15 +24,17 @@ class ServerSocketClass extends ParentSocket {
     Map<String, dynamic> msg = Message.decode(message);
     if (msg['type'] == MessageTypeEnum.handshake) {
       clients.add(Client.decode(jsonDecode(msg['message'])).first);
-      _sendMessageToSocket(
-          socket,
-          await Message.encode(
-            message: Client.encode(clients),
-            encryptionType: encryptionType,
-            type: MessageTypeEnum.update,
-            destinationIpAddress: socket.remoteAddress.address,
-            name: 'Server',
-          ));
+      for (final Socket _socket in _sockets) {
+        _sendMessageToSocket(
+            _socket,
+            await Message.encode(
+              message: Client.encode(clients),
+              encryptionType: encryptionType,
+              type: MessageTypeEnum.update,
+              destinationIpAddress: _socket.remoteAddress.address,
+              name: 'Server',
+            ));
+      }
       _p.send(clients);
       return;
     }
