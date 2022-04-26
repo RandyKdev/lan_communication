@@ -1,11 +1,9 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:async/async.dart';
 import 'package:lan_communication/encryptions/caesars_cipher.dart';
-import 'package:lan_communication/encryptions/cryptography.dart';
-import 'package:lan_communication/enums/messsage_type_enum.dart';
+import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/message.dart';
 import 'package:lan_communication/sockets/client_socket.dart';
 import 'package:lan_communication/global.dart';
@@ -22,17 +20,11 @@ class Background {
     final events = StreamQueue<dynamic>(commandReceivePort);
     commandSendPort = await events.next;
 
-    // bool isServer = await Setup.isServer();
-
     commandSendPort.send([name, cryptography, encryptionType]);
 
-    // commandSendPort.send('name: $name');
-    // commandSendPort
-    //     .send('crypt: ${Cryptography.stringRepresentation(cryptography)}');
     commandSendPort.send(isServer);
     await _parseInputsInBackground();
     while (true) {
-      // print(clients);
       clients = await events.next;
       for (int i = 0; i < clients.length; i++) {
         print('${i + 1}) ${clients[i].name} ${clients[i].ipAddress}');
@@ -124,7 +116,7 @@ class Background {
         }
       } else {
         do {
-          print('Enter messsage to be sent');
+          print('Enter message to be sent');
 
           message = stdin.readLineSync();
         } while (message == null || message.trim().isEmpty);

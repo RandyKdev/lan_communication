@@ -6,10 +6,8 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:lan_communication/client.dart';
-import 'package:lan_communication/encryptions/caesars_cipher.dart';
-import 'package:lan_communication/encryptions/pgp.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
-import 'package:lan_communication/enums/messsage_type_enum.dart';
+import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/global.dart';
 import 'package:lan_communication/message.dart';
 import 'package:lan_communication/sockets/parent_socket.dart';
@@ -23,10 +21,8 @@ class ServerSocketClass extends ParentSocket {
   Future<void> _handleIncomingMessage(Socket socket, Uint8List event) async {
     String message = String.fromCharCodes(event);
     Map<String, dynamic> msg = Message.decode(message);
-    print('Receive handshake');
     if (msg['type'] == MessageTypeEnum.handshake) {
       clients.add(Client.decode(jsonDecode(msg['message'])).first);
-      print('Receive handshake');
       _sendMessageToSocket(
           socket,
           await Message.encode(
@@ -36,13 +32,12 @@ class ServerSocketClass extends ParentSocket {
             destinationIpAddress: socket.remoteAddress.address,
             name: 'Server',
           ));
-      // sendMessage();
       _p.send(clients);
       return;
     }
     if (msg['destinationIpAddress'] == clients.first.ipAddress) {
       print('\nMessage');
-      print(cryptography.decrypt(message: msg['messsage']));
+      print(cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');
       return;
     }

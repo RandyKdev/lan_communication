@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:lan_communication/enums/connection_enum.dart';
-import 'package:lan_communication/enums/messsage_type_enum.dart';
+import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/setup.dart';
 
 class Message {

@@ -6,11 +6,9 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:lan_communication/client.dart';
-import 'package:lan_communication/encryptions/caesars_cipher.dart';
-import 'package:lan_communication/encryptions/pgp.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/connection_enum.dart';
-import 'package:lan_communication/enums/messsage_type_enum.dart';
+import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/global.dart';
 import 'package:lan_communication/message.dart';
 import 'package:lan_communication/sockets/parent_socket.dart';
@@ -59,7 +57,7 @@ class ClientSocketClass extends ParentSocket {
       _p.send(clients);
     } else {
       print('\nMessage');
-      print(cryptography.decrypt(message: msg['messsage']));
+      print(cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');
     }
   }
@@ -81,7 +79,6 @@ class ClientSocketClass extends ParentSocket {
       sourceAddress: ipAddress,
       sourcePort: networkingPort,
     );
-    print('hey');
     _clientSocket.listen(_handleMessage);
     _clientSocket.handleError(_handleError);
     _clientSocket.done.asStream().listen(_handleCloseSocket);

@@ -8,7 +8,7 @@ class Client {
 
   static String encode(List<Client> clients) {
     return jsonEncode(clients.map((e) {
-      return {
+      return <String, String?>{
         'name': e.name,
         'ipAddress': e.ipAddress,
         'publicKey': e.publicKey,
@@ -16,7 +16,7 @@ class Client {
     }).toList());
   }
 
-  static List<Client> decode(List<Map<String, String?>> message) {
+  static List<Client> decode(List<dynamic> message) {
     return message.map((e) {
       return Client(
           ipAddress: e['ipAddress']!,
