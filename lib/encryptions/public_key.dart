@@ -8,10 +8,11 @@ import 'package:lan_communication/encryptions/cryptography.dart';
 extension StringParsing on EncryptionResult {
   String parseString() {
     var j = {
-      'additionalAuthenticatedData': additionalAuthenticatedData,
-      'authenticationTag': authenticationTag,
-      'data': data,
-      'initializationVector': initializationVector,
+      'additionalAuthenticatedData':
+          String.fromCharCodes(additionalAuthenticatedData ?? []),
+      'authenticationTag': String.fromCharCodes(authenticationTag ?? []),
+      'data': String.fromCharCodes(data),
+      'initializationVector': String.fromCharCodes(initializationVector ?? []),
     };
     return jsonEncode(j);
   }
@@ -19,10 +20,13 @@ extension StringParsing on EncryptionResult {
   EncryptionResult parseEncryption(String message) {
     var msg = jsonDecode(message);
     return EncryptionResult(
-      msg['data'],
-      additionalAuthenticatedData: msg['additionalAuthenticatedData'],
-      authenticationTag: msg['authenticationTag'],
-      initializationVector: msg['initializationVector'],
+      Uint8List.fromList((msg['data'] as String).codeUnits),
+      additionalAuthenticatedData: Uint8List.fromList(
+          (msg['additionalAuthenticatedData'] as String).codeUnits),
+      authenticationTag:
+          Uint8List.fromList((msg['authenticationTag'] as String).codeUnits),
+      initializationVector:
+          Uint8List.fromList((msg['initializationVector'] as String).codeUnits),
     );
   }
 }
