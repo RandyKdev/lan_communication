@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'dart:typed_data';
@@ -44,12 +45,16 @@ class ServerSocketClass extends ParentSocket {
         (element) => element.ipAddress == socket.remoteAddress.address);
     _sockets.removeWhere(
         (element) => element.remoteAddress == socket.remoteAddress);
-    sendMessage(await Message.encode(
-      message: Client.encode(clients),
-      encryptionType: encryptionType,
-      type: MessageTypeEnum.update,
-      name: 'Server',
-    ));
+    for (final Socket socket in _sockets) {
+      _sendMessageToSocket(
+          socket,
+          await Message.encode(
+            message: Client.encode(clients),
+            encryptionType: encryptionType,
+            type: MessageTypeEnum.update,
+            name: 'Server',
+          ));
+    }
   }
 
   void _handleIncomingSocket(Socket socket) async {
@@ -99,7 +104,12 @@ class ServerSocketClass extends ParentSocket {
   @override
   void sendMessage(String message) {
     for (final Socket socket in _sockets) {
-      _sendMessageToSocket(socket, message);
+      if (socket.remoteAddress.address ==
+          (jsonDecode(message)
+              as Map<String, dynamic>)['destinationIpAddress']) {
+        _sendMessageToSocket(socket, message);
+        break;
+      }
     }
   }
 

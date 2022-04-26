@@ -9,7 +9,7 @@ class PublicKey extends Cryptography {
   void generateKeys() {}
 
   @override
-  String encrypt({required String message}) {
+  String encrypt({required String message, required String key}) {
     return '';
   }
 

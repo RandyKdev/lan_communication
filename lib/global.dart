@@ -13,4 +13,4 @@ late SendPort commandSendPort;
 late String? name;
 late EncryptionEnum encryptionType;
 late Cryptography cryptography;
-late List<Client> clients;
+List<Client> clients = [];

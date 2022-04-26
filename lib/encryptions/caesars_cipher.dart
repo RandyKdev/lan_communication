@@ -6,10 +6,10 @@ class CaesarsCipher extends Cryptography {
   set key(int k) => _key = k;
 
   @override
-  String encrypt({required String message}) {
+  String encrypt({required String message, required String key}) {
     return message
         .split('')
-        .map((e) => String.fromCharCode(e.codeUnits.first + _key))
+        .map((e) => String.fromCharCode(e.codeUnits.first + int.parse(key)))
         .toList()
         .reduce((value, element) => value + element);
   }

@@ -1,5 +1,5 @@
 class Cryptography {
-  String encrypt({required String message}) {
+  String encrypt({required String message, required String key}) {
     return '';
   }
 
