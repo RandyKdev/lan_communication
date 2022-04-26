@@ -23,14 +23,20 @@ class ServerSocketClass extends ParentSocket {
   Future<void> _handleIncomingMessage(Socket socket, Uint8List event) async {
     String message = String.fromCharCodes(event);
     Map<String, dynamic> msg = Message.decode(message);
+    print('Receive handshake');
     if (msg['type'] == MessageTypeEnum.handshake) {
-      clients.add(Client.decode(msg['message']).first);
-      sendMessage(await Message.encode(
-        message: Client.encode(clients),
-        encryptionType: encryptionType,
-        type: MessageTypeEnum.update,
-        name: 'Server',
-      ));
+      clients.add(Client.decode(jsonDecode(msg['message'])).first);
+      print('Receive handshake');
+      _sendMessageToSocket(
+          socket,
+          await Message.encode(
+            message: Client.encode(clients),
+            encryptionType: encryptionType,
+            type: MessageTypeEnum.update,
+            destinationIpAddress: socket.remoteAddress.address,
+            name: 'Server',
+          ));
+      // sendMessage();
       _p.send(clients);
       return;
     }

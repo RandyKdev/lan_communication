@@ -1,17 +1,19 @@
+import 'dart:convert';
+
 class Client {
   String name;
   String ipAddress;
   String? publicKey;
   Client({required this.ipAddress, required this.name, this.publicKey});
 
-  static List<Map<String, String?>> encode(List<Client> clients) {
-    return clients.map((e) {
+  static String encode(List<Client> clients) {
+    return jsonEncode(clients.map((e) {
       return {
         'name': e.name,
         'ipAddress': e.ipAddress,
         'publicKey': e.publicKey,
       };
-    }).toList();
+    }).toList());
   }
 
   static List<Client> decode(List<Map<String, String?>> message) {

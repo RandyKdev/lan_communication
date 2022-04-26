@@ -55,7 +55,7 @@ class ClientSocketClass extends ParentSocket {
       }
       return;
     } else if (msg['type'] == MessageTypeEnum.update) {
-      clients = Client.decode(msg['message']);
+      clients = Client.decode(jsonDecode(msg['message']));
       _p.send(clients);
     } else {
       print('\nMessage');
@@ -90,7 +90,7 @@ class ClientSocketClass extends ParentSocket {
 
   @override
   void sendMessage(String message) async {
-    _clientSocket.write(jsonEncode(message));
+    _clientSocket.write(message);
   }
 
   /// Closes all streams and shuts down the socket servers.
