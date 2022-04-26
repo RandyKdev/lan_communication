@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'dart:typed_data';
 
@@ -17,6 +18,7 @@ import 'package:lan_communication/setup.dart';
 
 class ClientSocketClass extends ParentSocket {
   late Socket _clientSocket;
+  late SendPort _p;
 
   Future<void> _handleMessage(Uint8List data) async {
     String message = String.fromCharCodes(data);
@@ -68,6 +70,7 @@ class ClientSocketClass extends ParentSocket {
       return;
     } else if (msg['type'] == MessageTypeEnum.update) {
       clients = Client.decode(msg['message']);
+      _p.send(clients);
     } else {
       print('\nMessage');
       print(cryptography.decrypt(message: msg['messsage']));
@@ -85,7 +88,7 @@ class ClientSocketClass extends ParentSocket {
   }
 
   @override
-  Future<void> start(String ipAddress) async {
+  Future<void> start(String ipAddress, SendPort p) async {
     _clientSocket = await Socket.connect(
       serverAddress,
       networkingPort,
@@ -95,6 +98,7 @@ class ClientSocketClass extends ParentSocket {
     _clientSocket.listen(_handleMessage);
     _clientSocket.handleError(_handleError);
     _clientSocket.done.asStream().listen(_handleCloseSocket);
+    _p = p;
   }
 
   @override

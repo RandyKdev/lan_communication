@@ -1,5 +1,12 @@
 import 'dart:io';
 
+import 'package:lan_communication/enums/connection_enum.dart';
+import 'package:lan_communication/global.dart';
+
+import 'encryptions/caesars_cipher.dart';
+import 'encryptions/pgp.dart';
+import 'encryptions/public_key.dart';
+
 class Setup {
   static Future<void> start() async {
     print('Welcome to the LAN Communication Program');
@@ -32,6 +39,26 @@ class Setup {
             input.toLowerCase() == 'no'));
 
     if (input.toLowerCase().contains('y')) {
+      String? cr;
+      do {
+        print('1) Caesars Cipher');
+        print('2) Public key');
+        print('3) PGP');
+        cr = stdin.readLineSync();
+        print(cr);
+      } while (cr == null || int.tryParse(cr) == null);
+
+      if (cr == '1') {
+        cryptography = CaesarsCipher();
+        encryptionType = EncryptionEnum.caesarsCipher;
+      } else if (cr == '2') {
+        cryptography = PublicKey();
+        encryptionType = EncryptionEnum.publicKey;
+      } else {
+        cryptography = PGP();
+        encryptionType = EncryptionEnum.pgp;
+      }
+
       return true;
     } else {
       return false;

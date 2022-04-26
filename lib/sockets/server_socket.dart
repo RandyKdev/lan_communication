@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'dart:typed_data';
 
@@ -17,6 +18,7 @@ class ServerSocketClass extends ParentSocket {
   List<Socket> get sockets => _sockets;
   final List<Socket> _sockets = [];
   late ServerSocket _serverSocket;
+  late SendPort _p;
 
   Future<void> _handleIncomingMessage(Socket socket, Uint8List event) async {
     String message = String.fromCharCodes(event);
@@ -29,6 +31,7 @@ class ServerSocketClass extends ParentSocket {
         type: MessageTypeEnum.update,
         name: 'Server',
       ));
+      _p.send(clients);
       return;
     }
     if (msg['destinationIpAddress'] == clients.first.ipAddress) {
@@ -47,6 +50,7 @@ class ServerSocketClass extends ParentSocket {
         (element) => element.ipAddress == socket.remoteAddress.address);
     _sockets.removeWhere(
         (element) => element.remoteAddress == socket.remoteAddress);
+    _p.send(clients);
     for (final Socket socket in _sockets) {
       _sendMessageToSocket(
           socket,
@@ -79,7 +83,7 @@ class ServerSocketClass extends ParentSocket {
   }
 
   @override
-  Future<void> start(String ipAddress) async {
+  Future<void> start(String ipAddress, SendPort p) async {
     _serverSocket = await ServerSocket.bind(
       ipAddress,
       networkingPort,
@@ -87,23 +91,6 @@ class ServerSocketClass extends ParentSocket {
     );
     _serverSocket.listen(_handleIncomingSocket);
     _serverSocket.handleError(_handleError);
-
-    String? cr;
-    do {
-      print('1) Caesars Cipher');
-      print('2) Public key');
-      print('3) PGP');
-      cr = stdin.readLineSync();
-      print(cr);
-    } while (cr == null || int.tryParse(cr) == null);
-
-    if (cr == '1') {
-      cryptography = CaesarsCipher();
-    } else if (cr == '2') {
-      cryptography = PublicKey();
-    } else {
-      cryptography = PGP();
-    }
 
     clients = [
       Client(
@@ -113,6 +100,8 @@ class ServerSocketClass extends ParentSocket {
               ? (cryptography as PublicKey).publicKey
               : null)
     ];
+    _p = p;
+    p.send(clients);
     print('Connection made');
   }
 

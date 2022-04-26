@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
 
 import 'package:async/async.dart';
 import 'package:lan_communication/encryptions/caesars_cipher.dart';
+import 'package:lan_communication/encryptions/cryptography.dart';
 import 'package:lan_communication/enums/messsage_type_enum.dart';
 import 'package:lan_communication/message.dart';
 import 'package:lan_communication/sockets/client_socket.dart';
@@ -19,15 +21,21 @@ class Background {
 
     final events = StreamQueue<dynamic>(commandReceivePort);
     commandSendPort = await events.next;
-    await _parseInputsInBackground();
 
     // bool isServer = await Setup.isServer();
 
     commandSendPort.send('name: $name');
+    commandSendPort
+        .send('crypt: ${Cryptography.stringRepresentation(cryptography)}');
     commandSendPort.send(isServer);
-
-    await events.next;
-    exit(0);
+    await _parseInputsInBackground();
+    while (true) {
+      // print(clients);
+      clients = await events.next;
+      for (int i = 0; i < clients.length; i++) {
+        print('${i + 1}) ${clients[i].name} ${clients[i].ipAddress}');
+      }
+    }
   }
 
   static void _commandIsolate(SendPort p) async {
@@ -44,12 +52,25 @@ class Background {
         } else {
           socket = ClientSocketClass();
         }
-        await socket.start(ipAddress);
+        await socket.start(ipAddress, p);
       } else if (message is String && message != 'exit') {
         if (message.contains('name:')) {
           name = message.substring(6);
+        } else if (message.contains('crypt:')) {
+          cryptography = Cryptography.cryptRepresentation(message.substring(7));
         } else {
-          socket.sendMessage(message);
+          Map<String, dynamic> i = Message.decode(message);
+          i['destinationIpAddress'] =
+              clients[int.parse(i['destinationIpAddress']) - 1].ipAddress;
+          socket.sendMessage(await Message.encode(
+            encryptionType: i['encryptionType'],
+            message: i['message'],
+            name: i['sourceName'],
+            type: i['type'],
+            destinationIpAddress: i['destinationIpAddress'],
+          )
+              // jsonEncode(i));
+              );
         }
       } else {
         print('Exiting...');
@@ -61,13 +82,15 @@ class Background {
   }
 
   static Future<void> _parseInputsInBackground() async {
+    // _inputIsolate();
     final inputReceivePort = ReceivePort();
     await Isolate.spawn(_inputIsolate, inputReceivePort.sendPort);
 
     final events = StreamQueue<dynamic>(inputReceivePort);
     final inputSendPort = await events.next;
 
-    inputSendPort.send(commandSendPort);
+    inputSendPort.send([commandSendPort, cryptography, encryptionType, name]);
+    // inputSendPort.send(cryptography);
   }
 
   static void _inputIsolate(SendPort p) async {
@@ -77,31 +100,28 @@ class Background {
     String? send;
     String? message;
     String? key;
-
-    final _commandSendPort = await _commandReceivePort.first;
+    List<dynamic> e = await _commandReceivePort.first;
+    final _commandSendPort = e.first;
+    cryptography = e[1];
+    encryptionType = e[2];
+    name = e[3];
 
     while (true) {
       print('Type exit to quit');
       if (send == null) {
-        for (int i = 0; i < clients.length; i++) {
-          print('${i + 1}) ${clients[i].name} ${clients[i].ipAddress}');
-        }
         do {
           print('Enter number to whom to send to');
           send = stdin.readLineSync();
           if (send != null && send == 'exit') {
             break;
           }
-        } while (send == null ||
-            int.tryParse(send) == null ||
-            !(int.parse(send) <= clients.length && int.parse(send) >= 1));
+        } while (send == null || int.tryParse(send) == null);
         if (send == 'exit') {
           break;
         }
       } else {
         do {
-          print(
-              'Enter messsage to be sent to ${clients[int.parse(send)].name} ${clients[int.parse(send)].ipAddress}');
+          print('Enter messsage to be sent');
 
           message = stdin.readLineSync();
         } while (message == null || message.trim().isEmpty);
@@ -126,13 +146,14 @@ class Background {
           encryptionType: encryptionType,
           type: MessageTypeEnum.data,
           name: name!,
+          destinationIpAddress: send,
         );
-        _commandSendPort.send(j);
+        _commandSendPort!.send(j);
         send = null;
         message = null;
       }
     }
-    _commandSendPort.send('exit');
-    Isolate.exit();
+    _commandSendPort!.send('exit');
+    exit(0);
   }
 }
