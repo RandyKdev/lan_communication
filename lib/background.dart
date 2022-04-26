@@ -23,11 +23,9 @@ class Background {
     commandSendPort = await events.next;
 
     // bool isServer = await Setup.isServer();
-    if (isServer) {
-      commandSendPort.send([name, cryptography]);
-    } else {
-      commandSendPort.send([name]);
-    }
+
+    commandSendPort.send([name, cryptography]);
+
     // commandSendPort.send('name: $name');
     // commandSendPort
     //     .send('crypt: ${Cryptography.stringRepresentation(cryptography)}');
@@ -54,14 +52,14 @@ class Background {
         if (message == true) {
           socket = ServerSocketClass();
         } else {
+          print('hey');
           socket = ClientSocketClass();
         }
         await socket.start(ipAddress, p);
+        print('start');
       } else if (message is List) {
         name = message[0];
-        if (message.length > 1) {
-          cryptography = message[1];
-        }
+        cryptography = message[1];
       } else if (message is String && message != 'exit') {
         Map<String, dynamic> i = Message.decode(message);
         i['destinationIpAddress'] =
@@ -75,6 +73,7 @@ class Background {
         )
             // jsonEncode(i));
             );
+        print('Sent');
       } else {
         print('Exiting...');
         await socket.stop();

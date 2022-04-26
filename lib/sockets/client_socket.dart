@@ -25,18 +25,8 @@ class ClientSocketClass extends ParentSocket {
     Map<String, dynamic> msg = Message.decode(message);
     if (msg['type'] == MessageTypeEnum.handshake) {
       print('Connection established');
-      encryptionType = msg['encryption'] as EncryptionEnum;
       switch (encryptionType) {
         case EncryptionEnum.caesarsCipher:
-          cryptography = CaesarsCipher();
-          String? input;
-          int? key;
-          do {
-            print('Enter your caesars cipher key');
-            input = stdin.readLineSync();
-            key = int.tryParse(input!);
-          } while (key == null || key == 0);
-          (cryptography as CaesarsCipher).key = key;
           String msg1 = await Message.encode(
             type: MessageTypeEnum.handshake,
             encryptionType: encryptionType,
@@ -47,12 +37,8 @@ class ClientSocketClass extends ParentSocket {
           sendMessage(msg1);
           break;
         case EncryptionEnum.pgp:
-          cryptography = PGP();
-          (cryptography as PGP).generateSessionKey();
           break;
         case EncryptionEnum.publicKey:
-          cryptography = PublicKey();
-          (cryptography as PublicKey).generateKeys();
           String msg1 = await Message.encode(
             type: MessageTypeEnum.handshake,
             encryptionType: encryptionType,
@@ -95,6 +81,7 @@ class ClientSocketClass extends ParentSocket {
       sourceAddress: ipAddress,
       sourcePort: networkingPort,
     );
+    print('hey');
     _clientSocket.listen(_handleMessage);
     _clientSocket.handleError(_handleError);
     _clientSocket.done.asStream().listen(_handleCloseSocket);
