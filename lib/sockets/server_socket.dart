@@ -5,6 +5,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:lan_communication/client.dart';
+import 'package:lan_communication/encryptions/caesars_cipher.dart';
+import 'package:lan_communication/encryptions/pgp.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/messsage_type_enum.dart';
 import 'package:lan_communication/global.dart';
@@ -85,6 +87,23 @@ class ServerSocketClass extends ParentSocket {
     );
     _serverSocket.listen(_handleIncomingSocket);
     _serverSocket.handleError(_handleError);
+
+    String? cr;
+    do {
+      print('1) Caesars Cipher');
+      print('2) Public key');
+      print('3) PGP');
+      cr = stdin.readLineSync();
+      print(cr);
+    } while (cr == null || int.tryParse(cr) == null);
+
+    if (cr == '1') {
+      cryptography = CaesarsCipher();
+    } else if (cr == '2') {
+      cryptography = PublicKey();
+    } else {
+      cryptography = PGP();
+    }
 
     clients = [
       Client(

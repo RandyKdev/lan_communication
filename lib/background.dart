@@ -22,6 +22,8 @@ class Background {
     await _parseInputsInBackground();
 
     // bool isServer = await Setup.isServer();
+
+    commandSendPort.send('name: $name');
     commandSendPort.send(isServer);
 
     await events.next;
@@ -44,7 +46,11 @@ class Background {
         }
         await socket.start(ipAddress);
       } else if (message is String && message != 'exit') {
-        socket.sendMessage(message);
+        if (message.contains('name:')) {
+          name = message.substring(6);
+        } else {
+          socket.sendMessage(message);
+        }
       } else {
         print('Exiting...');
         await socket.stop();
