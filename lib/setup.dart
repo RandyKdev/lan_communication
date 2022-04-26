@@ -51,9 +51,17 @@ class Setup {
       if (cr == '1') {
         cryptography = CaesarsCipher();
         encryptionType = EncryptionEnum.caesarsCipher;
+        cr = null;
+        do {
+          print('Enter Caesars cipher key');
+          cr = stdin.readLineSync();
+          print(cr);
+        } while (cr == null || int.tryParse(cr) == null);
+        (cryptography as CaesarsCipher).key = int.tryParse(cr)!;
       } else if (cr == '2') {
         cryptography = PublicKey();
         encryptionType = EncryptionEnum.publicKey;
+        (cryptography as PublicKey).generateKeys();
       } else {
         cryptography = PGP();
         encryptionType = EncryptionEnum.pgp;

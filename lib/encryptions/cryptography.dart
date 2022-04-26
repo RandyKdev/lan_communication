@@ -11,15 +11,15 @@ class Cryptography {
     return '';
   }
 
-  static String stringRepresentation(Cryptography c) {
-    if (c is CaesarsCipher) return 'caesarsCipher';
-    if (c is PublicKey) return 'publicKey';
-    return 'pgp';
-  }
+  // static String stringRepresentation(Cryptography c) {
+  //   if (c is CaesarsCipher) return 'caesarsCipher';
+  //   if (c is PublicKey) return 'publicKey';
+  //   return 'pgp';
+  // }
 
-  static Cryptography cryptRepresentation(String c) {
-    if (c == 'caesarsCipher') return CaesarsCipher();
-    if (c == 'publicKey') return PublicKey();
-    return PGP();
-  }
+  // static Cryptography cryptRepresentation(String c) {
+  //   if (c == 'caesarsCipher') return CaesarsCipher();
+  //   if (c == 'publicKey') return PublicKey();
+  //   return PGP();
+  // }
 }

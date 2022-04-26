@@ -23,10 +23,14 @@ class Background {
     commandSendPort = await events.next;
 
     // bool isServer = await Setup.isServer();
-
-    commandSendPort.send('name: $name');
-    commandSendPort
-        .send('crypt: ${Cryptography.stringRepresentation(cryptography)}');
+    if (isServer) {
+      commandSendPort.send([name, cryptography]);
+    } else {
+      commandSendPort.send([name]);
+    }
+    // commandSendPort.send('name: $name');
+    // commandSendPort
+    //     .send('crypt: ${Cryptography.stringRepresentation(cryptography)}');
     commandSendPort.send(isServer);
     await _parseInputsInBackground();
     while (true) {
@@ -53,25 +57,24 @@ class Background {
           socket = ClientSocketClass();
         }
         await socket.start(ipAddress, p);
-      } else if (message is String && message != 'exit') {
-        if (message.contains('name:')) {
-          name = message.substring(6);
-        } else if (message.contains('crypt:')) {
-          cryptography = Cryptography.cryptRepresentation(message.substring(7));
-        } else {
-          Map<String, dynamic> i = Message.decode(message);
-          i['destinationIpAddress'] =
-              clients[int.parse(i['destinationIpAddress']) - 1].ipAddress;
-          socket.sendMessage(await Message.encode(
-            encryptionType: i['encryptionType'],
-            message: i['message'],
-            name: i['sourceName'],
-            type: i['type'],
-            destinationIpAddress: i['destinationIpAddress'],
-          )
-              // jsonEncode(i));
-              );
+      } else if (message is List) {
+        name = message[0];
+        if (message.length > 1) {
+          cryptography = message[1];
         }
+      } else if (message is String && message != 'exit') {
+        Map<String, dynamic> i = Message.decode(message);
+        i['destinationIpAddress'] =
+            clients[int.parse(i['destinationIpAddress']) - 1].ipAddress;
+        socket.sendMessage(await Message.encode(
+          encryptionType: i['encryptionType'],
+          message: i['message'],
+          name: i['sourceName'],
+          type: i['type'],
+          destinationIpAddress: i['destinationIpAddress'],
+        )
+            // jsonEncode(i));
+            );
       } else {
         print('Exiting...');
         await socket.stop();
