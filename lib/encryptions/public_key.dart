@@ -8,10 +8,16 @@ import 'package:lan_communication/encryptions/cryptography.dart';
 extension StringParsing on EncryptionResult {
   String parseString() {
     var j = {
-      'additionalAuthenticatedData': additionalAuthenticatedData?.toList(),
-      'authenticationTag': authenticationTag?.toList(),
-      'data': data.toList(),
-      'initializationVector': initializationVector?.toList(),
+      'additionalAuthenticatedData': additionalAuthenticatedData == null
+          ? null
+          : String.fromCharCodes(additionalAuthenticatedData!),
+      'authenticationTag': authenticationTag == null
+          ? null
+          : String.fromCharCodes(authenticationTag!),
+      'data': String.fromCharCodes(data),
+      'initializationVector': initializationVector == null
+          ? null
+          : String.fromCharCodes(initializationVector!),
     };
     return jsonEncode(j);
   }
@@ -19,16 +25,18 @@ extension StringParsing on EncryptionResult {
   EncryptionResult parseEncryption(String message) {
     var msg = jsonDecode(message);
     return EncryptionResult(
-      Uint8List.fromList((msg['data'])),
+      Uint8List.fromList((msg['data'] as String).codeUnits),
       additionalAuthenticatedData: msg['additionalAuthenticatedData'] == null
           ? null
-          : Uint8List.fromList((msg['additionalAuthenticatedData'])),
+          : Uint8List.fromList(
+              (msg['additionalAuthenticatedData'] as String).codeUnits),
       authenticationTag: msg['authenticationTag'] == null
           ? null
-          : Uint8List.fromList((msg['authenticationTag'])),
+          : Uint8List.fromList((msg['authenticationTag'] as String).codeUnits),
       initializationVector: msg['initializationVector'] == null
           ? null
-          : Uint8List.fromList((msg['initializationVector'])),
+          : Uint8List.fromList(
+              (msg['initializationVector'] as String).codeUnits),
     );
   }
 }
@@ -50,7 +58,6 @@ class PublicKeyCrypt extends Cryptography {
 
   @override
   String encrypt({required String message, required dynamic key}) {
-    print(Uint8List.fromList(message.codeUnits).toList());
     return (key as PublicKey)
         .createEncrypter(algorithms.encryption.rsa.oaep)
         .encrypt(Uint8List.fromList(message.codeUnits))
