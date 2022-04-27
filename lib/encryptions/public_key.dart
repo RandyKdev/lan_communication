@@ -8,10 +8,10 @@ import 'package:lan_communication/encryptions/cryptography.dart';
 extension StringParsing on EncryptionResult {
   String parseString() {
     var j = {
-      'additionalAuthenticatedData': additionalAuthenticatedData,
-      'authenticationTag': authenticationTag,
-      'data': data,
-      'initializationVector': initializationVector,
+      'additionalAuthenticatedData': additionalAuthenticatedData?.toList(),
+      'authenticationTag': authenticationTag?.toList(),
+      'data': data.toList(),
+      'initializationVector': initializationVector?.toList(),
     };
     return jsonEncode(j);
   }
