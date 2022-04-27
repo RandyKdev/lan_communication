@@ -19,17 +19,16 @@ extension StringParsing on EncryptionResult {
   EncryptionResult parseEncryption(String message) {
     var msg = jsonDecode(message);
     return EncryptionResult(
-      Uint8List.fromList((msg['data'] as List<int>)),
+      Uint8List.fromList((msg['data'])),
       additionalAuthenticatedData: msg['additionalAuthenticatedData'] == null
           ? null
-          : Uint8List.fromList(
-              (msg['additionalAuthenticatedData'] as List<int>)),
+          : Uint8List.fromList((msg['additionalAuthenticatedData'])),
       authenticationTag: msg['authenticationTag'] == null
           ? null
-          : Uint8List.fromList((msg['authenticationTag'] as List<int>)),
+          : Uint8List.fromList((msg['authenticationTag'])),
       initializationVector: msg['initializationVector'] == null
           ? null
-          : Uint8List.fromList((msg['initializationVector'] as List<int>)),
+          : Uint8List.fromList((msg['initializationVector'])),
     );
   }
 }
