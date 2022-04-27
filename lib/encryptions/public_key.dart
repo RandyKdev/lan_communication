@@ -8,11 +8,16 @@ import 'package:lan_communication/encryptions/cryptography.dart';
 extension StringParsing on EncryptionResult {
   String parseString() {
     var j = {
-      'additionalAuthenticatedData':
-          String.fromCharCodes(additionalAuthenticatedData ?? []),
-      'authenticationTag': String.fromCharCodes(authenticationTag ?? []),
+      'additionalAuthenticatedData': additionalAuthenticatedData == null
+          ? null
+          : String.fromCharCodes(additionalAuthenticatedData!),
+      'authenticationTag': authenticationTag == null
+          ? null
+          : String.fromCharCodes(authenticationTag!),
       'data': String.fromCharCodes(data),
-      'initializationVector': String.fromCharCodes(initializationVector ?? []),
+      'initializationVector': initializationVector == null
+          ? null
+          : String.fromCharCodes(initializationVector!),
     };
     return jsonEncode(j);
   }
@@ -21,12 +26,17 @@ extension StringParsing on EncryptionResult {
     var msg = jsonDecode(message);
     return EncryptionResult(
       Uint8List.fromList((msg['data'] as String).codeUnits),
-      additionalAuthenticatedData: Uint8List.fromList(
-          (msg['additionalAuthenticatedData'] as String).codeUnits),
-      authenticationTag:
-          Uint8List.fromList((msg['authenticationTag'] as String).codeUnits),
-      initializationVector:
-          Uint8List.fromList((msg['initializationVector'] as String).codeUnits),
+      additionalAuthenticatedData: msg['additionalAuthenticatedData'] == null
+          ? null
+          : Uint8List.fromList(
+              (msg['additionalAuthenticatedData'] as String).codeUnits),
+      authenticationTag: msg['authenticationTag'] == null
+          ? null
+          : Uint8List.fromList((msg['authenticationTag'] as String).codeUnits),
+      initializationVector: msg['initializationVector'] == null
+          ? null
+          : Uint8List.fromList(
+              (msg['initializationVector'] as String).codeUnits),
     );
   }
 }
