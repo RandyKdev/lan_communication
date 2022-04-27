@@ -50,7 +50,8 @@ class PublicKeyCrypt extends Cryptography {
   void generateKeys() {
     KeyPair keyPair;
     do {
-      keyPair = KeyPair.generateRsa(exponent: BigInt.from(1), bitStrength: 12);
+      keyPair =
+          KeyPair.generateRsa(exponent: BigInt.from(1), bitStrength: 4048);
     } while (keyPair.publicKey == null || keyPair.privateKey == null);
     _publicKey = keyPair.publicKey!;
     _privateKey = keyPair.privateKey!;
