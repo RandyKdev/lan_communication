@@ -50,8 +50,9 @@ class PublicKeyCrypt extends Cryptography {
 
   @override
   String encrypt({required String message, required dynamic key}) {
+    print(Uint8List.fromList(message.codeUnits).toList());
     return (key as PublicKey)
-        .createEncrypter(algorithms.encryption.rsa.pkcs1)
+        .createEncrypter(algorithms.encryption.rsa.oaep)
         .encrypt(Uint8List.fromList(message.codeUnits))
         .parseString();
   }
@@ -59,7 +60,7 @@ class PublicKeyCrypt extends Cryptography {
   @override
   String decrypt({required String message}) {
     return String.fromCharCodes(_privateKey
-        .createEncrypter(algorithms.encryption.rsa.pkcs1)
+        .createEncrypter(algorithms.encryption.rsa.oaep)
         .decrypt(EncryptionResult(Uint8List.fromList(''.codeUnits))
             .parseEncryption(message)));
   }
