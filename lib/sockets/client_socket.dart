@@ -44,7 +44,8 @@ class ClientSocketClass extends ParentSocket {
               Client(
                   ipAddress: await Setup.getIpAddress(),
                   publicKey: [
-                    (cryptography as PublicKeyCrypt).halfPublicKey[(cryptography as PublicKeyCrypt).index],
+                    (cryptography as PublicKeyCrypt)
+                        .halfPublicKey[(cryptography as PublicKeyCrypt).index],
                     (cryptography as PublicKeyCrypt).n
                   ],
                   name: name!)
@@ -68,7 +69,6 @@ class ClientSocketClass extends ParentSocket {
       } else {
         print('Encrypted Message: ' + msg['message']);
       }
-      // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');

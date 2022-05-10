@@ -32,8 +32,8 @@ class PublicKeyCrypt extends Cryptography {
       encryptedMessage.add(k);
       i++;
     }
-    print("\nTHE ENCRYPTED MESSAGE IS");
-    print(encryptedMessage);
+    print('Encrypted Message: ' +
+        String.fromCharCodes(encryptedMessage.map((e) => e + 31).toList()));
     return encryptedMessage;
   }
 
@@ -83,7 +83,7 @@ class PublicKeyCrypt extends Cryptography {
   }
 
   void generateKeys() {
-    x = 7; 
+    x = 7;
     y = 13;
     prime(y.toInt());
     n = (x * y).toInt();
@@ -91,7 +91,5 @@ class PublicKeyCrypt extends Cryptography {
 
     encryptionKey();
     index = Random().nextInt(15);
-    
   }
-
 }

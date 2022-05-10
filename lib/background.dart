@@ -27,7 +27,7 @@ class Background {
     await _parseInputsInBackground();
     while (true) {
       clients = await events.next;
-      print("\n\nList of connected peers");
+      print("\nList of connected peers");
       for (int i = 0; i < clients.length; i++) {
         if (clients[i].ipAddress == await Setup.getIpAddress()) {
           continue;
@@ -35,7 +35,7 @@ class Background {
         print(
             'Id: ${i + 1}, Name: ${clients[i].name}, Ip address: ${clients[i].ipAddress}, Public key: ${clients[i].publicKey?[0] ?? ''}');
       }
-      print('\n\n');
+      print('\n');
     }
   }
 
@@ -127,10 +127,10 @@ class Background {
     name = e[3];
 
     while (true) {
-      print('Type exit to quit');
+      print('\nType exit to quit\n');
       if (send == null) {
         do {
-          print('Enter number to whom to send to');
+          print('\nEnter number to whom to send to');
           send = stdin.readLineSync();
           if (send != null && send == 'exit') {
             break;
@@ -141,7 +141,7 @@ class Background {
         }
       } else {
         do {
-          print('Enter message to be sent');
+          print('\nEnter message to be sent');
 
           message = stdin.readLineSync();
         } while (message == null || message.trim().isEmpty);
@@ -151,7 +151,7 @@ class Background {
 
         if (cryptography is CaesarsCipher) {
           do {
-            print('Enter key');
+            print('\nEnter key');
             key = stdin.readLineSync();
             if (key != null && key == 'exit') {
               break;

@@ -47,7 +47,6 @@ class ServerSocketClass extends ParentSocket {
       } else {
         print('Encrypted Message: ' + msg['message']);
       }
-      // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');
