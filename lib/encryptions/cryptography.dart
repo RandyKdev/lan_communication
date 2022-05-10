@@ -1,5 +1,5 @@
 class Cryptography {
-  dynamic encrypt({required String message, required List<dynamic> key}) {
+  dynamic encrypt({required String message, required dynamic key}) {
     return '';
   }
 

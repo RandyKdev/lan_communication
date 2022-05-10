@@ -87,7 +87,7 @@ class PublicKeyCrypt extends Cryptography {
   }
 
   @override
-  dynamic encrypt({required String message, required List<dynamic> key}) {
+  dynamic encrypt({required String message, required dynamic key}) {
     temp = [];
     encryptedMessage = [];
     int pt, ct, k, len;
@@ -132,11 +132,11 @@ class PublicKeyCrypt extends Cryptography {
       i++;
     }
     // m.add(-1);
-    print("\n\nTHE DECRYPTED MESSAGE IS\n");
-    // for (i = 0; i < m.length; i++) {
-    print(m);
-    // }
-    print("\n");
+    // print("\n\nTHE DECRYPTED MESSAGE IS\n");
+    // // for (i = 0; i < m.length; i++) {
+    // print(m);
+    // // }
+    // print("\n");
     return m;
   }
 
