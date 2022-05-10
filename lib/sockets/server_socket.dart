@@ -6,6 +6,7 @@ import 'dart:isolate';
 import 'dart:typed_data';
 
 import 'package:lan_communication/client.dart';
+import 'package:lan_communication/encryptions/pgp.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/global.dart';
@@ -46,6 +47,9 @@ class ServerSocketClass extends ParentSocket {
                 .toList()));
       } else {
         print('Encrypted Message: ' + msg['message']);
+      }
+      if (cryptography is PGP) {
+        (cryptography as PGP).encryptedSessionKey = msg['sessionKey'];
       }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));

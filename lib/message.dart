@@ -12,7 +12,7 @@ class Message {
     required String name,
     String? destinationIpAddress,
     List<int>? publicKey,
-    String? sessionKey,
+    dynamic sessionKey,
   }) async {
     final msg = <String, dynamic>{
       'type': getMessageString(type),

@@ -7,11 +7,13 @@ class CaesarsCipher extends Cryptography {
 
   @override
   String encrypt({required String message, required dynamic key}) {
-    return message
+    String e = message
         .split('')
         .map((e) => String.fromCharCode(e.codeUnits.first + int.parse(key)))
         .toList()
         .reduce((value, element) => value + element);
+    print("Encrypted Message: $e");
+    return e;
   }
 
   @override

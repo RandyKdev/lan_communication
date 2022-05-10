@@ -3,6 +3,7 @@ import 'dart:isolate';
 
 import 'package:async/async.dart';
 import 'package:lan_communication/encryptions/caesars_cipher.dart';
+import 'package:lan_communication/encryptions/pgp.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/message_type_enum.dart';
 import 'package:lan_communication/message.dart';
@@ -90,6 +91,23 @@ class Background {
           )
               // jsonEncode(i));
               );
+        } else {
+          socket.sendMessage(await Message.encode(
+            encryptionType: i['encryptionType'],
+            message: cryptography.encrypt(
+              message: i['message'],
+              key: [...clients
+                      .lastWhere((element) =>
+                          element.ipAddress == i['destinationIpAddress'])
+                      .publicKey as List<dynamic>, i['sessionKey']],
+            ),
+            name: i['sourceName'],
+            type: i['type'],
+            destinationIpAddress: i['destinationIpAddress'],
+            sessionKey: (cryptography as PGP).encryptedSessionKey,
+          )
+              // jsonEncode(i));
+              );
         }
       } else {
         print('Exiting...');
@@ -174,6 +192,26 @@ class Background {
             type: MessageTypeEnum.data,
             name: name!,
             destinationIpAddress: send,
+            
+          );
+        } else {
+          do {
+            print('\nEnter key');
+            key = stdin.readLineSync();
+            if (key != null && key == 'exit') {
+              break;
+            }
+          } while (key == null || int.tryParse(key) == null);
+          if (key == 'exit') {
+            break;
+          }
+          j = await Message.encode(
+            message: message,
+            encryptionType: encryptionType,
+            type: MessageTypeEnum.data,
+            name: name!,
+            destinationIpAddress: send,
+            sessionKey: key!,
           );
         }
 
