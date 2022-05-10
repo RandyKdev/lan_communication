@@ -43,13 +43,15 @@ import 'package:lan_communication/encryptions/cryptography.dart';
 
 class PublicKeyCrypt extends Cryptography {
   late int x, y, n, t, i, flag, j;
+  late int index;
+
   // List<int> e;
 
   List<int> halfPublicKey = [],
       halfPrivateKey = [],
       temp = [],
       encryptedMessage = [];
-  String msg = 'Jan';
+  // String msg = 'Jan';
   String m = '';
 
   // late PrivateKey _privateKey;
@@ -67,14 +69,14 @@ class PublicKeyCrypt extends Cryptography {
   //   }
   // }
 
-  int prime1(int i) {
-    if (i >= 7) return 7;
-    if (i >= 5) return 5;
-    if (i >= 3) return 3;
-    return 2;
-    // if (i >= 1) return 1;
-    // return 1;
-  }
+  // int prime1(int i) {
+  //   if (i >= 7) return 7;
+  //   if (i >= 5) return 5;
+  //   if (i >= 3) return 3;
+  //   return 2;
+  //   // if (i >= 1) return 1;
+  //   // return 1;
+  // }
 
   int cd(int a) {
     int k = 1;
@@ -92,15 +94,15 @@ class PublicKeyCrypt extends Cryptography {
     i = 0;
     len = message.length;
     while (i != len) {
-      pt = message.codeUnits[i];
-      pt = pt - 64;
+      pt = message.runes.elementAt(i);
+      pt = pt - 31;
       k = 1;
       for (j = 0; j < key[0]; j++) {
         k = k * pt;
         k = k % key[1] as int;
       }
       temp.add(k);
-      ct = k + 64;
+      ct = k + 31;
       encryptedMessage.add(ct);
       i++;
     }
@@ -115,7 +117,7 @@ class PublicKeyCrypt extends Cryptography {
 
   @override
   String decrypt({required dynamic message}) {
-    int pt, ct, key = halfPrivateKey[0], k;
+    int pt, ct, key = halfPrivateKey[index], k;
     m = '';
     i = 0;
     for (int l = 0; l < message.length; l++) {
@@ -125,7 +127,7 @@ class PublicKeyCrypt extends Cryptography {
         k = k * ct;
         k = k % n;
       }
-      pt = k + 64;
+      pt = k + 31;
       m += String.fromCharCode(pt);
       i++;
     }
@@ -151,7 +153,7 @@ class PublicKeyCrypt extends Cryptography {
           halfPrivateKey.add(flag);
           k++;
         }
-        if (k == 99) break;
+        // if (k == 99) break;
       }
     }
   }
@@ -166,19 +168,23 @@ class PublicKeyCrypt extends Cryptography {
   }
 
   void generateKeys() {
-    int x1 = Random().nextInt(10);
-    int y1 = Random().nextInt(10);
-    x = prime1(x1);
-    y = prime1(y1);
+    // int x1 = Random().nextInt(10);
+    // int y1 = Random().nextInt(10);
+    x = 7; //prime1(x1);
+    y = 13;
+    //prime1(y1);
     if (x == y) y = 11;
     prime(y.toInt());
-    m = msg;
+    // m = msg;
     //prime(q1).toDouble();
     n = (x * y).toInt();
     t = ((x - 1) * (y - 1)).toInt();
 
     encryptionKey();
+    index = Random().nextInt(15);
     print(halfPublicKey);
+    List<int> i = encrypt(message: 'hegyadbxe', key: [halfPublicKey[0], n]);
+    decrypt(message: i);
     // print("\nPOSSIBLE VALUES OF e AND d ARE\n");
     // for (i = 0; i < j - 1; i++) print("\n%ld\t%ld", e[i], d[i]);
     // encrypt1();

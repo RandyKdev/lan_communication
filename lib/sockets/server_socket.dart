@@ -110,7 +110,7 @@ class ServerSocketClass extends ParentSocket {
           ipAddress: ipAddress,
           publicKey: cryptography.runtimeType == PublicKeyCrypt
               ? [
-                  (cryptography as PublicKeyCrypt).halfPublicKey[0],
+                  (cryptography as PublicKeyCrypt).halfPublicKey[(cryptography as PublicKeyCrypt).index],
                   (cryptography as PublicKeyCrypt).n
                 ]
               : null)
