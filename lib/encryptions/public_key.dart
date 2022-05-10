@@ -93,14 +93,14 @@ class PublicKeyCrypt extends Cryptography {
     len = message.length;
     while (i != len) {
       pt = message.codeUnits[i];
-      pt = pt;
+      pt = pt - 60;
       k = 1;
       for (j = 0; j < key[0]; j++) {
         k = k * pt;
         k = k % key[1] as int;
       }
       temp.add(k);
-      ct = k;
+      ct = k + 60;
       encryptedMessage.add(ct);
       i++;
     }
@@ -118,14 +118,14 @@ class PublicKeyCrypt extends Cryptography {
     int pt, ct, key = halfPrivateKey[0], k;
     m = '';
     i = 0;
-    for(int l = 0; l < message.length; l++) {
+    for (int l = 0; l < message.length; l++) {
       ct = message.codeUnits[i];
       k = 1;
       for (j = 0; j < key; j++) {
         k = k * ct;
         k = k % n;
       }
-      pt = k;
+      pt = k + 60;
       m += String.fromCharCode(pt);
       i++;
     }
