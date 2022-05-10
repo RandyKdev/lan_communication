@@ -63,10 +63,8 @@ class ClientSocketClass extends ParentSocket {
       print('\nMessage');
       if (cryptography is PublicKeyCrypt) {
         print('Encrypted Message: ' +
-            String.fromCharCodes(
-                (EncryptionResult(Uint8List.fromList(''.codeUnits))
-                        .parseEncryption(msg['message']))
-                    .data));
+            (cryptography as PublicKeyCrypt)
+                .encrypt(message: msg['message'], key: msg['key']));
       } else {
         print('Encrypted Message: ' + msg['message']);
       }
