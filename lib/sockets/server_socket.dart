@@ -45,7 +45,14 @@ class ServerSocketClass extends ParentSocket {
       //       (cryptography as PublicKeyCrypt)
       //           .encrypt(message: msg['message'], key: msg['key']));
       // } else {
-      print('Encrypted Message: ' + String.fromCharCodes((msg['message'] as List<dynamic>).map((e) => (e as int) + 31).toList()));
+      if (cryptography is PublicKeyCrypt) {
+        print('Encrypted Message: ' +
+            String.fromCharCodes((msg['message'] as List<dynamic>)
+                .map((e) => (e as int) + 31)
+                .toList()));
+      } else {
+        print('Encrypted Message: ' + msg['message']);
+      }
       // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
@@ -110,7 +117,8 @@ class ServerSocketClass extends ParentSocket {
           ipAddress: ipAddress,
           publicKey: cryptography.runtimeType == PublicKeyCrypt
               ? [
-                  (cryptography as PublicKeyCrypt).halfPublicKey[(cryptography as PublicKeyCrypt).index],
+                  (cryptography as PublicKeyCrypt)
+                      .halfPublicKey[(cryptography as PublicKeyCrypt).index],
                   (cryptography as PublicKeyCrypt).n
                 ]
               : null)

@@ -45,7 +45,7 @@ class ClientSocketClass extends ParentSocket {
               Client(
                   ipAddress: await Setup.getIpAddress(),
                   publicKey: [
-                    (cryptography as PublicKeyCrypt).halfPublicKey[0],
+                    (cryptography as PublicKeyCrypt).halfPublicKey[(cryptography as PublicKeyCrypt).index],
                     (cryptography as PublicKeyCrypt).n
                   ],
                   name: name!)
@@ -66,7 +66,14 @@ class ClientSocketClass extends ParentSocket {
       //       (cryptography as PublicKeyCrypt)
       //           .encrypt(message: jsonDecode(msg['message']), key: msg['publicKey']));
       // } else {
-      print('Encrypted Message: ' + msg['message'].toString());
+      if (cryptography is PublicKeyCrypt) {
+        print('Encrypted Message: ' +
+            String.fromCharCodes((msg['message'] as List<dynamic>)
+                .map((e) => (e as int) + 31)
+                .toList()));
+      } else {
+        print('Encrypted Message: ' + msg['message']);
+      }
       // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
