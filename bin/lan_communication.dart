@@ -1,8 +1,5 @@
-import 'dart:async';
 import 'dart:io';
-import 'dart:isolate';
 
-import 'package:async/async.dart';
 import 'package:lan_communication/background.dart';
 import 'package:lan_communication/global.dart';
 

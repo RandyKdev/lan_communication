@@ -29,7 +29,7 @@ class Background {
       clients = await events.next;
       for (int i = 0; i < clients.length; i++) {
         print(
-            '${i + 1}) ${clients[i].name} ${clients[i].ipAddress} ${clients[i].publicKey?[0] ?? ''}');
+            '${i + 1}) Name: ${clients[i].name} Ip address: ${clients[i].ipAddress} Public key: ${clients[i].publicKey?[0] ?? ''}');
       }
     }
   }

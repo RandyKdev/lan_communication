@@ -13,6 +13,3 @@ environment:
 dev_dependencies:
   lints: ^1.0.0
   test: ^1.16.0
-dependencies: 
-  crypto_keys: ^0.3.0
-  rsa_encrypt: ^2.0.0

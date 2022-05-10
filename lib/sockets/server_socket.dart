@@ -5,7 +5,6 @@ import 'dart:isolate';
 
 import 'dart:typed_data';
 
-import 'package:crypto_keys/crypto_keys.dart';
 import 'package:lan_communication/client.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/message_type_enum.dart';
@@ -40,11 +39,6 @@ class ServerSocketClass extends ParentSocket {
     }
     if (msg['destinationIpAddress'] == clients.first.ipAddress) {
       print('\nMessage');
-      // if (cryptography is PublicKeyCrypt) {
-      //   print('Encrypted Message: ' +
-      //       (cryptography as PublicKeyCrypt)
-      //           .encrypt(message: msg['message'], key: msg['key']));
-      // } else {
       if (cryptography is PublicKeyCrypt) {
         print('Encrypted Message: ' +
             String.fromCharCodes((msg['message'] as List<dynamic>)

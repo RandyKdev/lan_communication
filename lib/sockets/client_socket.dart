@@ -5,7 +5,6 @@ import 'dart:isolate';
 
 import 'dart:typed_data';
 
-import 'package:crypto_keys/crypto_keys.dart';
 import 'package:lan_communication/client.dart';
 import 'package:lan_communication/encryptions/public_key.dart';
 import 'package:lan_communication/enums/connection_enum.dart';
@@ -61,11 +60,6 @@ class ClientSocketClass extends ParentSocket {
       _p.send(clients);
     } else {
       print('\nMessage');
-      // if (cryptography is PublicKeyCrypt) {
-      //   print('Encrypted Message: ' +
-      //       (cryptography as PublicKeyCrypt)
-      //           .encrypt(message: jsonDecode(msg['message']), key: msg['publicKey']));
-      // } else {
       if (cryptography is PublicKeyCrypt) {
         print('Encrypted Message: ' +
             String.fromCharCodes((msg['message'] as List<dynamic>)
