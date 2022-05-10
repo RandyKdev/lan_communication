@@ -85,7 +85,7 @@ class PublicKeyCrypt extends Cryptography {
   }
 
   @override
-  String encrypt({required String message, required List<int> key}) {
+  String encrypt({required String message, required List<dynamic> key}) {
     int pt, ct, k, len;
     i = 0;
     len = message.length;
@@ -95,7 +95,7 @@ class PublicKeyCrypt extends Cryptography {
       k = 1;
       for (j = 0; j < key[0]; j++) {
         k = k * pt;
-        k = k % key[1];
+        k = k % key[1] as int;
       }
       temp.add(k);
       ct = k + 60;

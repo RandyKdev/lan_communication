@@ -79,7 +79,7 @@ class Setup {
     );
     NetworkInterface ipNet = networkInterfaces
         .where(
-          (element) => element.name == 'wlp1s0' || element.name == 'Wi-Fi',
+          (element) => element.name == 'wlp1s0' || element.name == 'WiFi',
         )
         .first;
     return ipNet.addresses.first.address;

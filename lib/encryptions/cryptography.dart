@@ -1,5 +1,5 @@
 class Cryptography {
-  String encrypt({required String message, required List<int> key}) {
+  String encrypt({required String message, required List<dynamic> key}) {
     return '';
   }
 

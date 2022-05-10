@@ -3,7 +3,7 @@ import 'dart:convert';
 class Client {
   String name;
   String ipAddress;
-  List<int>? publicKey;
+  List<dynamic>? publicKey;
   Client({required this.ipAddress, required this.name, this.publicKey});
 
   static String encode(List<Client> clients) {
@@ -13,7 +13,7 @@ class Client {
         'ipAddress': e.ipAddress,
         'publicKey': e.publicKey,
       };
-    }));
+    }).toList());
   }
 
   static List<Client> decode(List<dynamic> message) {
