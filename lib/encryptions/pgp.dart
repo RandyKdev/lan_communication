@@ -11,7 +11,7 @@ class PGP extends Cryptography {
   }
 
   @override
-  String decrypt({required String message}) {
+  String decrypt({required dynamic message}) {
     return '';
   }
 }

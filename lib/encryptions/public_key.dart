@@ -85,7 +85,7 @@ class PublicKeyCrypt extends Cryptography {
   }
 
   @override
-  String encrypt({required String message, required List<dynamic> key}) {
+  dynamic encrypt({required String message, required List<dynamic> key}) {
     temp = [];
     encryptedMessage = [];
     int pt, ct, k, len;
@@ -109,17 +109,17 @@ class PublicKeyCrypt extends Cryptography {
     //for (i = 0; en[i] != -1; i++) {
     print(String.fromCharCodes(encryptedMessage));
     print(String.fromCharCodes(temp));
-    return String.fromCharCodes(temp);
+    return temp;
     //}
   }
 
   @override
-  String decrypt({required String message}) {
+  String decrypt({required dynamic message}) {
     int pt, ct, key = halfPrivateKey[0], k;
     m = '';
     i = 0;
     for (int l = 0; l < message.length; l++) {
-      ct = message.codeUnits[i];
+      ct = message[i];
       k = 1;
       for (j = 0; j < key; j++) {
         k = k * ct;

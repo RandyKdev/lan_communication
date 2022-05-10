@@ -1,9 +1,9 @@
 class Cryptography {
-  String encrypt({required String message, required List<dynamic> key}) {
+  dynamic encrypt({required String message, required List<dynamic> key}) {
     return '';
   }
 
-  String decrypt({required String message}) {
+  String decrypt({required dynamic message}) {
     return '';
   }
 }
