@@ -36,6 +36,23 @@ class ClientSocketClass extends ParentSocket {
           sendMessage(msg1);
           break;
         case EncryptionEnum.pgp:
+          String msg1 = await Message.encode(
+            type: MessageTypeEnum.handshake,
+            encryptionType: encryptionType,
+            message: Client.encode([
+              Client(
+                  ipAddress: await Setup.getIpAddress(),
+                  publicKey: [
+                    (cryptography as PGP)
+                        .publicKeyClass
+                        .halfPublicKey[(cryptography as PublicKeyCrypt).index],
+                    (cryptography as PublicKeyCrypt).n
+                  ],
+                  name: name!)
+            ]),
+            name: name!,
+          );
+          sendMessage(msg1);
           break;
         case EncryptionEnum.publicKey:
           String msg1 = await Message.encode(
