@@ -66,7 +66,7 @@ class ClientSocketClass extends ParentSocket {
       //       (cryptography as PublicKeyCrypt)
       //           .encrypt(message: jsonDecode(msg['message']), key: msg['publicKey']));
       // } else {
-      print('Encrypted Message: ' + msg['message']);
+      print('Encrypted Message: ' + msg['message'].toString());
       // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));

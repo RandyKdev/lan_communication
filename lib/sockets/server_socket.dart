@@ -45,7 +45,7 @@ class ServerSocketClass extends ParentSocket {
       //       (cryptography as PublicKeyCrypt)
       //           .encrypt(message: msg['message'], key: msg['key']));
       // } else {
-      print('Encrypted Message: ' + msg['message']);
+      print('Encrypted Message: ' + msg['message'].toString());
       // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
