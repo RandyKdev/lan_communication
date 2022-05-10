@@ -111,7 +111,10 @@ class ServerSocketClass extends ParentSocket {
           name: name!,
           ipAddress: ipAddress,
           publicKey: cryptography.runtimeType == PublicKeyCrypt
-              ? (cryptography as PublicKeyCrypt).publicKey
+              ? [
+                  (cryptography as PublicKeyCrypt).halfPublicKey[0],
+                  (cryptography as PublicKeyCrypt).n
+                ]
               : null)
     ];
     _p = p;

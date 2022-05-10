@@ -1,11 +1,9 @@
 import 'dart:convert';
 
-import 'package:crypto_keys/crypto_keys.dart';
-
 class Client {
   String name;
   String ipAddress;
-  PublicKey? publicKey;
+  List<int>? publicKey;
   Client({required this.ipAddress, required this.name, this.publicKey});
 
   static String encode(List<Client> clients) {
@@ -13,27 +11,18 @@ class Client {
       return <String, dynamic>{
         'name': e.name,
         'ipAddress': e.ipAddress,
-        'publicKey': e.publicKey != null
-            ? {
-                "exponent": (e.publicKey as RsaPublicKey).exponent.toString(),
-                "modulus": (e.publicKey as RsaPublicKey).modulus.toString(),
-              }
-            : null,
+        'publicKey': e.publicKey,
       };
-    }).toList());
+    }));
   }
 
   static List<Client> decode(List<dynamic> message) {
     return message.map((e) {
       return Client(
-          ipAddress: e['ipAddress']!,
-          name: e['name']!,
-          publicKey: e['publicKey'] != null
-              ? RsaPublicKey(
-                  exponent: BigInt.parse(e['publicKey']['exponent']),
-                  modulus: BigInt.parse(e['publicKey']['modulus']),
-                )
-              : null);
+        ipAddress: e['ipAddress']!,
+        name: e['name']!,
+        publicKey: e['publicKey'],
+      );
     }).toList();
   }
 }

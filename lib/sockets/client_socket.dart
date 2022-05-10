@@ -44,7 +44,10 @@ class ClientSocketClass extends ParentSocket {
             message: Client.encode([
               Client(
                   ipAddress: await Setup.getIpAddress(),
-                  publicKey: (cryptography as PublicKeyCrypt).publicKey,
+                  publicKey: [
+                    (cryptography as PublicKeyCrypt).halfPublicKey[0],
+                    (cryptography as PublicKeyCrypt).n
+                  ],
                   name: name!)
             ]),
             name: name!,

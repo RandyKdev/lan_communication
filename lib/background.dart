@@ -73,9 +73,10 @@ class Background {
             message: cryptography.encrypt(
               message: i['message'],
               key: clients
-                  .lastWhere((element) =>
-                      element.ipAddress == i['destinationIpAddress'])
-                  .publicKey,
+                      .lastWhere((element) =>
+                          element.ipAddress == i['destinationIpAddress'])
+                      .publicKey ??
+                  [],
             ),
             name: i['sourceName'],
             type: i['type'],

@@ -5,7 +5,7 @@ import 'package:lan_communication/enums/connection_enum.dart';
 import 'package:lan_communication/client.dart';
 
 int networkingPort = 2001;
-String serverAddress = '192.168.0.101';
+String serverAddress = '192.168.0.100';
 
 late ReceivePort commandReceivePort;
 late SendPort commandSendPort;
