@@ -27,10 +27,15 @@ class Background {
     await _parseInputsInBackground();
     while (true) {
       clients = await events.next;
+      print("\n\nList of connected peers");
       for (int i = 0; i < clients.length; i++) {
+        if (clients[i].ipAddress == await Setup.getIpAddress()) {
+          continue;
+        }
         print(
-            '${i + 1}) Name: ${clients[i].name} Ip address: ${clients[i].ipAddress} Public key: ${clients[i].publicKey?[0] ?? ''}');
+            'Id: ${i + 1}, Name: ${clients[i].name}, Ip address: ${clients[i].ipAddress}, Public key: ${clients[i].publicKey?[0] ?? ''}');
       }
+      print('\n\n');
     }
   }
 
