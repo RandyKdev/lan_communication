@@ -61,13 +61,13 @@ class ClientSocketClass extends ParentSocket {
       _p.send(clients);
     } else {
       print('\nMessage');
-      if (cryptography is PublicKeyCrypt) {
-        print('Encrypted Message: ' +
-            (cryptography as PublicKeyCrypt)
-                .encrypt(message: msg['message'], key: msg['key']));
-      } else {
-        print('Encrypted Message: ' + msg['message']);
-      }
+      // if (cryptography is PublicKeyCrypt) {
+      //   print('Encrypted Message: ' +
+      //       (cryptography as PublicKeyCrypt)
+      //           .encrypt(message: jsonDecode(msg['message']), key: msg['publicKey']));
+      // } else {
+      print('Encrypted Message: ' + msg['message']);
+      // }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
       print('From ${msg['sourceName']} ${msg['sourceIp']}\n');

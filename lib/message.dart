@@ -11,10 +11,10 @@ class Message {
     required MessageTypeEnum type,
     required String name,
     String? destinationIpAddress,
-    String? publicKey,
+    List<int>? publicKey,
     String? sessionKey,
   }) async {
-    final msg = <String, String?>{
+    final msg = <String, dynamic>{
       'type': getMessageString(type),
       'publicKey': publicKey,
       'sessionKey': sessionKey,
