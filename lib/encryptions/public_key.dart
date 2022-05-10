@@ -71,9 +71,9 @@ class PublicKeyCrypt extends Cryptography {
     if (i >= 7) return 7;
     if (i >= 5) return 5;
     if (i >= 3) return 3;
-    if (i >= 2) return 2;
-    if (i >= 1) return 1;
-    return 1;
+    return 2;
+    // if (i >= 1) return 1;
+    // return 1;
   }
 
   int cd(int a) {
@@ -165,8 +165,8 @@ class PublicKeyCrypt extends Cryptography {
   void generateKeys() {
     int x1 = Random().nextInt(10);
     int y1 = Random().nextInt(10);
-    x = prime(x1);
-    y = prime(y1);
+    x = prime1(x1);
+    y = prime1(y1);
     if (x == y) y = 11;
     prime(y.toInt());
     m = msg;
@@ -175,6 +175,7 @@ class PublicKeyCrypt extends Cryptography {
     t = ((x - 1) * (y - 1)).toInt();
 
     encryptionKey();
+    print(halfPublicKey);
     // print("\nPOSSIBLE VALUES OF e AND d ARE\n");
     // for (i = 0; i < j - 1; i++) print("\n%ld\t%ld", e[i], d[i]);
     // encrypt1();
