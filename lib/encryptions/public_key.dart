@@ -23,7 +23,7 @@ class PublicKeyCrypt extends Cryptography {
     len = message.length;
     while (i != len) {
       pt = message.runes.elementAt(i);
-      pt = pt - 31;
+      pt = pt - 30;
       k = 1;
       for (j = 0; j < key[0]; j++) {
         k = k * pt;
@@ -33,7 +33,7 @@ class PublicKeyCrypt extends Cryptography {
       i++;
     }
     print('Encrypted Message: ' +
-        String.fromCharCodes(encryptedMessage.map((e) => e + 31).toList()));
+        String.fromCharCodes(encryptedMessage.map((e) => e + 30).toList()));
     return encryptedMessage;
   }
 
@@ -49,7 +49,7 @@ class PublicKeyCrypt extends Cryptography {
         k = k * ct;
         k = k % n;
       }
-      pt = k + 31;
+      pt = k + 30;
       m += String.fromCharCode(pt);
       i++;
     }
