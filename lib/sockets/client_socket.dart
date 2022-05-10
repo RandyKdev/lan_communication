@@ -43,10 +43,9 @@ class ClientSocketClass extends ParentSocket {
               Client(
                   ipAddress: await Setup.getIpAddress(),
                   publicKey: [
-                    (cryptography as PGP)
-                        .publicKeyClass
-                        .halfPublicKey[(cryptography as PublicKeyCrypt).index],
-                    (cryptography as PublicKeyCrypt).n
+                    (cryptography as PGP).publicKeyClass.halfPublicKey[
+                        (cryptography as PGP).publicKeyClass.index],
+                    (cryptography as PGP).publicKeyClass.n,
                   ],
                   name: name!)
             ]),
