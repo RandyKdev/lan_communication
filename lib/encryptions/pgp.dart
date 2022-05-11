@@ -6,7 +6,7 @@ class PGP extends Cryptography {
   PublicKeyCrypt publicKeyClass = PublicKeyCrypt();
   CaesarsCipher caesarsCipherClass = CaesarsCipher();
   String sessionKey = '';
-  List<int> encryptedSessionKey = [];
+  List<dynamic> encryptedSessionKey = [];
 
   void generateSessionKey() {
     publicKeyClass.generateKeys();
