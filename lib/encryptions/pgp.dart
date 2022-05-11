@@ -21,6 +21,9 @@ class PGP extends Cryptography {
   @override
   String decrypt({required dynamic message}) {
     sessionKey = publicKeyClass.decrypt(message: encryptedSessionKey);
+    print(
+        "Encrypted Key: ${String.fromCharCodes(encryptedSessionKey.map((e) => (e as int) + 36).toList())}");
+    print("Decrypted Key: ${sessionKey.toString()}");
     caesarsCipherClass.key = int.tryParse(sessionKey) ?? 1;
     return caesarsCipherClass.decrypt(message: message);
   }

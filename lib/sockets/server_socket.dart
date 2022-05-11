@@ -118,7 +118,13 @@ class ServerSocketClass extends ParentSocket {
                       .halfPublicKey[(cryptography as PublicKeyCrypt).index],
                   (cryptography as PublicKeyCrypt).n
                 ]
-              : null)
+              : cryptography.runtimeType == PGP
+                  ? [
+                      (cryptography as PGP).publicKeyClass.halfPublicKey[
+                          (cryptography as PGP).publicKeyClass.index],
+                      (cryptography as PGP).publicKeyClass.n,
+                    ]
+                  : null)
     ];
     _p = p;
     p.send(clients);
