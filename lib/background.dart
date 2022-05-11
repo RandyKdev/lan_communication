@@ -71,9 +71,7 @@ class Background {
             name: i['sourceName'],
             type: i['type'],
             destinationIpAddress: i['destinationIpAddress'],
-          )
-              // jsonEncode(i));
-              );
+          ));
         } else if (cryptography is PublicKeyCrypt) {
           socket.sendMessage(await Message.encode(
             encryptionType: i['encryptionType'],
@@ -88,26 +86,25 @@ class Background {
             name: i['sourceName'],
             type: i['type'],
             destinationIpAddress: i['destinationIpAddress'],
-          )
-              // jsonEncode(i));
-              );
+          ));
         } else {
           socket.sendMessage(await Message.encode(
             encryptionType: i['encryptionType'],
             message: cryptography.encrypt(
               message: i['message'],
-              key: [...clients
-                      .lastWhere((element) =>
-                          element.ipAddress == i['destinationIpAddress'])
-                      .publicKey as List<dynamic>, i['sessionKey']],
+              key: [
+                ...clients
+                    .lastWhere((element) =>
+                        element.ipAddress == i['destinationIpAddress'])
+                    .publicKey as List<dynamic>,
+                i['sessionKey']
+              ],
             ),
             name: i['sourceName'],
             type: i['type'],
             destinationIpAddress: i['destinationIpAddress'],
             sessionKey: (cryptography as PGP).encryptedSessionKey,
-          )
-              // jsonEncode(i));
-              );
+          ));
         }
       } else {
         print('Exiting...');
@@ -127,7 +124,6 @@ class Background {
     final inputSendPort = await events.next;
 
     inputSendPort.send([commandSendPort, cryptography, encryptionType, name]);
-    // inputSendPort.send(cryptography);
   }
 
   static void _inputIsolate(SendPort p) async {
@@ -192,7 +188,6 @@ class Background {
             type: MessageTypeEnum.data,
             name: name!,
             destinationIpAddress: send,
-            
           );
         } else {
           do {

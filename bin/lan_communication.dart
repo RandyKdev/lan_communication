@@ -12,7 +12,6 @@ void main(List<String> arguments) async {
     print('Enter your name');
     name = stdin.readLineSync();
   } while (name == null && name!.trim().isEmpty);
-  // Setup.isServer();
 
   await Background.startIsolates();
 }

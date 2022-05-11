@@ -76,7 +76,6 @@ class ClientSocketClass extends ParentSocket {
     } else if (msg['type'] == MessageTypeEnum.update) {
       clients = Client.decode(jsonDecode(msg['message']));
       _p.send(clients);
-      print([clients]);
     } else {
       print('\nMessage');
       if (cryptography is PublicKeyCrypt) {

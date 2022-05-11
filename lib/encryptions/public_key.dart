@@ -91,8 +91,5 @@ class PublicKeyCrypt extends Cryptography {
 
     encryptionKey();
     index = Random().nextInt(15);
-    // while (index == 6) {
-    //   index = Random().nextInt(15);
-    // }
   }
 }
