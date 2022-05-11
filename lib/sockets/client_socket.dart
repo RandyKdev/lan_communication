@@ -88,9 +88,7 @@ class ClientSocketClass extends ParentSocket {
         print('Encrypted Message: ' + msg['message']);
       }
       if (cryptography is PGP) {
-        (cryptography as PGP).encryptedSessionKey = [
-          ...msg['sessionKey'] as List<int>
-        ];
+        (cryptography as PGP).encryptedSessionKey = msg['sessionKey'];
       }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
