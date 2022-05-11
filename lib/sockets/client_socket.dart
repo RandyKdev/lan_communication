@@ -76,6 +76,7 @@ class ClientSocketClass extends ParentSocket {
     } else if (msg['type'] == MessageTypeEnum.update) {
       clients = Client.decode(jsonDecode(msg['message']));
       _p.send(clients);
+      print([clients]);
     } else {
       print('\nMessage');
       if (cryptography is PublicKeyCrypt) {
@@ -87,7 +88,9 @@ class ClientSocketClass extends ParentSocket {
         print('Encrypted Message: ' + msg['message']);
       }
       if (cryptography is PGP) {
-        (cryptography as PGP).encryptedSessionKey = msg['sessionKey'];
+        (cryptography as PGP).encryptedSessionKey = [
+          ...msg['sessionKey'] as List<int>
+        ];
       }
       print('Decrypted Message: ' +
           cryptography.decrypt(message: msg['message']));
