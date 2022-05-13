@@ -43,7 +43,7 @@ class ServerSocketClass extends ParentSocket {
       if (cryptography is PublicKeyCrypt) {
         print('Encrypted Message: ' +
             String.fromCharCodes((msg['message'] as List<dynamic>)
-                .map((e) => (e as int) + 36)
+                .map((e) => (e as int) + 31)
                 .toList()));
       } else {
         print('Encrypted Message: ' + msg['message']);

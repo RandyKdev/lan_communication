@@ -22,7 +22,7 @@ class PGP extends Cryptography {
   String decrypt({required dynamic message}) {
     sessionKey = publicKeyClass.decrypt(message: encryptedSessionKey);
     print(
-        "Encrypted Key: ${String.fromCharCodes(encryptedSessionKey.map((e) => (e as int) + 36).toList())}");
+        "Encrypted Key: ${String.fromCharCodes(encryptedSessionKey.map((e) => (e as int) + 31).toList())}");
     print("Decrypted Key: ${sessionKey.toString()}");
     caesarsCipherClass.key = int.tryParse(sessionKey) ?? 1;
     return caesarsCipherClass.decrypt(message: message);
